@@ -58,20 +58,37 @@ class VendingMachine:
         conn = self.generate_conn_singleton()
         cursor = conn.cursor()
 
-        # Edit location first
-        sql = """UPDATE machine_info SET location = %s  WHERE id = %s"""
-        data = (updated_location, mach_id)
-        cursor.execute(sql, data)
         sql = """UPDATE machine_info SET machine_name = %s  WHERE id = %s"""
         data = (updated_name, mach_id)
         cursor.execute(sql, data)
+        sql = """UPDATE machine_info SET location = %s  WHERE id = %s"""
+        data = (updated_location, mach_id)
+        cursor.execute(sql, data)
+
         # Commit your changes in the database
         conn.commit()
         conn.close()
 
-    # def addProduct():
-    #     # TODO: There are multiple products like coke, taro, sprite.
-    #
+    def addProduct(self, prod_name, prod_amount):
+        conn = self.generate_conn_singleton()
+        cursor = conn.cursor()
+        sql = """INSERT INTO Product(
+                product_name, product_amount)
+                VALUES (%s,%s)"""
+        data = (prod_name, prod_amount)
+        try:
+            # Executing the SQL command
+            cursor.execute(sql, data)
+
+            # Commit your changes in the database
+            conn.commit()
+        except:
+            # Rolling back in case of error
+            conn.rollback()
+
+            # Closing the connection
+        conn.close()
+
     # def editProduct():
     #     # TODO: edit the amount of product.
     #
