@@ -89,12 +89,38 @@ class VendingMachine:
             # Closing the connection
         conn.close()
 
-    # def editProduct():
-    #     # TODO: edit the amount of product.
-    #
-    # def removeProduct():
-    #     # TODO: remove product from the vending machine.
-    #
+    def editProduct(self, prod_id, prod_amount, prod_bind):
+        conn = self.generate_conn_singleton()
+        cursor = conn.cursor()
+
+        sql = """UPDATE machine_info SET product_amount = %s  WHERE id = %s"""
+        data = (prod_amount, prod_id)
+        cursor.execute(sql, data)
+        sql = """UPDATE machine_info SET bind_with = %s  WHERE id = %s"""
+        data = (prod_bind, prod_id)
+        cursor.execute(sql, data)
+        # Commit your changes in the database
+        conn.commit()
+        conn.close()
+
+    def removeProduct(self, prod_id):
+        conn = self.generate_conn_singleton()
+        cursor = conn.cursor()
+        sql = """DELETE FROM Product WHERE id = %s"""
+        try:
+            # Executing the SQL command
+            cursor.execute(sql, prod_id)
+
+            # Commit your changes in the database
+            conn.commit()
+
+        except:
+            # Rolling back in case of error
+            conn.rollback()
+
+        # Closing the connection
+        conn.close()
+
     def listing(self):
         conn = self.generate_conn_singleton()
         cursor = conn.cursor()
