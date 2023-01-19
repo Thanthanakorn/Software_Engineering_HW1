@@ -36,9 +36,24 @@ class VendingMachine:
         # Closing the connection
         conn.close()
 
-    # def deleteMachine():
-    #     # TODO: delete vending machine.
-    #
+    def deleteMachine(self, mach_id):
+        conn = self.generate_conn_singleton()
+        cursor = conn.cursor()
+        sql = """DELETE FROM machine_info WHERE id = %s"""
+        try:
+            # Executing the SQL command
+            cursor.execute(sql, mach_id)
+
+            # Commit your changes in the database
+            conn.commit()
+
+        except:
+            # Rolling back in case of error
+            conn.rollback()
+
+        # Closing the connection
+        conn.close()
+
     def editMachine(self, mach_id, updated_name, updated_location):
         conn = self.generate_conn_singleton()
         cursor = conn.cursor()
