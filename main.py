@@ -39,9 +39,21 @@ class VendingMachine:
     # def deleteMachine():
     #     # TODO: delete vending machine.
     #
-    # def editMachine():
-    #     # TODO: edit name, location of vending machine.
-    #
+    def editMachine(self, mach_id, updated_name, updated_location):
+        conn = self.generate_conn_singleton()
+        cursor = conn.cursor()
+
+        # Edit location first
+        sql = """UPDATE machine_info SET location = %s  WHERE id = %s"""
+        data = (updated_location, mach_id)
+        cursor.execute(sql, data)
+        sql = """UPDATE machine_info SET machine_name = %s  WHERE id = %s"""
+        data = (updated_name, mach_id)
+        cursor.execute(sql, data)
+        # Commit your changes in the database
+        conn.commit()
+        conn.close()
+
     # def addProduct():
     #     # TODO: There are multiple products like coke, taro, sprite.
     #
@@ -61,4 +73,5 @@ class VendingMachine:
 
 ans = VendingMachine()
 ans.createMachine("Machine_prototype", "MUIC")
+ans.editMachine("6", "second_one", "MU")
 print(ans.listing())
